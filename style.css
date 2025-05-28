@@ -1,0 +1,93 @@
+/* style.css */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 0;
+}
+.container{
+   height: 1000px;
+  width: 1000px;
+  display: grid;
+
+  grid-template-rows: 10% 25% 50% 15%;
+  grid-template-areas:
+    "head"
+    "form"
+    "table"
+    "bottom";
+  gap: 10px;
+  padding: 20px;
+  background-color: white;
+  margin: auto;
+  border-radius: 10px;
+}
+.container h1{
+  grid-area: head;
+    text-align: center;
+}
+
+form {
+  grid-area: form;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.inputs {
+  display: flex;
+  flex-wrap: wrap;
+  grid-area: 20px;
+  justify-content: space-around;
+  align-items: center; 
+  gap: 15px;
+}
+
+form input, form select, form button {
+    padding: 5px 20px 5px 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+form button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+form button:hover {
+    background-color: #218838;
+}
+
+
+.expense-table table {
+  grid-area: table;
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 20px;
+  overflow-y:auto;
+}
+
+  
+.expense-table table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.expense-table th, .expense-table td {
+     padding: 10px 60px 10px 60px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.expense-table th {
+    background-color: #f8f8f8;
+}
+
+.footer{
+  display: flex;
+  justify-self: end;
+  gap:40px;
+}

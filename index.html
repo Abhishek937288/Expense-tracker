@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Expenses-Tracker</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+<div class="container">
+    <h1 class="head">Expense Tracker</h1>
+    <div>
+    <form id="expenses-form">     
+    <div class="inputs">
+      <div class="input-field">
+        <input
+          type="text"
+          id="expense-name"
+          placeholder="expense-name"
+          required
+          name="expenseName"
+        />
+      </div>
+      <div class="input-field">
+        <input
+          type="number"
+          id="expense-amt"
+          placeholder="expense-amt"
+          required
+          name="expenseAmount"
+        />
+      </div>
+      <div class="input-field">
+        <label for="category">Category</label>
+        <select name="category" id="category">
+          <option value="travel">Travel</option>
+          <option value="rent">Rent</option>
+          <option value="general">General</option>
+          <option value="food">Food</option>
+          <option value="others">Others</option>
+        </select>
+      </div>
+      <div class="input-field">
+        <input
+          type="date"
+          id="date"
+          placeholder="Eneter the date"
+          required
+          name="date"
+        />
+        <label for="date"> Date</label>
+      </div>
+      <div class="input-field">
+        <button type="submit"> Add expenses</button>
+      </div>
+    </form>
+    </div>
+    <div class="expense-table">
+        <table class="table">
+            <thead>
+              <th>Expense Name</th>
+                <th>Amount</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Action</th>
+            </thead>
+            <tbody class="table-el">
+
+            </tbody>
+
+        </table>
+    </div>
+     <div class="footer">
+    <div class="total-amount">
+      <strong>Total:</strong>$<span id="total-amount">0</span>
+    </div>
+    <div class="filter">
+      <label for="filter"> Type</label>
+      <select name="typeof-expense" id="filter">
+        <option value="all">all</option>
+       <option value="travel">Travel</option>
+          <option value="rent">Rent</option>
+          <option value="general">General</option>
+          <option value="food">Food</option>
+          <option value="others">Others</option>
+      </select>
+    </div>
+    </div>
+    </div>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
