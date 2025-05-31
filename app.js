@@ -4,21 +4,12 @@ const tableEl = document.querySelector(".table-el");
 const totalAmountEl = document.querySelector("#total-amount");
 const filterEl = document.querySelector("#filter");
 
-const storeFunctions = new StoreManager();
-const saveFn = storeFunctions.save;
-const fetchFn = storeFunctions.fetch;
+const storage = new StoreManager("expenses-v2");
 
-const storedExpenses = await fetchFn("expenses");
-if(storedExpenses){
-  display(storedExpenses);
-  await totalAmount();
-}
+display();
 
-let expenses = [];
-
-formEl.addEventListener("submit", async (e) => {
+formEl.addEventListener("submit", (e) => {
   e.preventDefault();
-  // if we are updaing or creating
   const formData = new FormData(e.currentTarget);
   const datas = {};
   for (const item of formData.entries()) {
@@ -26,21 +17,17 @@ formEl.addEventListener("submit", async (e) => {
     datas[name] = value;
   }
 
-  let allExpense = await fetchFn("expenses");
-  if(datas.id){
-    allExpense = allExpense.map(item => item.id == datas.id ? datas : item)
-    formEl["submit"].textContent = "Add Expense"
-  }else {
-   datas.id = generateId();
-   allExpense.push(datas);
+  if (datas.id) {
+    storage.update(datas);
+    formEl["submit"].textContent = "Add Expense";
+  } else {
+    storage.create(datas);
   }
   formEl.reset();
-  saveFn("expenses",allExpense);
-  display(allExpense);
-  await totalAmount(allExpense);
+  display();
 });
 
-function display(expenses) {
+function display(expenses = storage.expense) {
   tableEl.innerHTML = "";
   expenses.forEach((expense) => {
     const row = document.createElement("tr");
@@ -56,63 +43,41 @@ function display(expenses) {
    `;
     tableEl.appendChild(row);
   });
-}
+  totalAmount();
 
-tableEl.addEventListener("click", async (event)=> {
-  if (event.target.classList.contains("delete")) {
-    const id = event.target.dataset.id;
-    expenses = expenses.filter((expense) => expense.id !== id);
-    saveFn("expenses",expenses);
-    const storedExpenses = await fetchFn("expenses");
-    display(storedExpenses);
-    await totalAmount();
-  }
-
-  if(event.target.classList.contains("edit")){
-    const id = event.target.dataset.id;
-     const expenses = await fetchFn("expenses");
-    const targetExpense = expenses.find((item)=> item.id == id)
-    // if (formEl.elements[key]) {
-    // formEl.elements[key].value = expense[0][key];
-    // console.log(id)
-    // formEl['expenseName'].value = "New value";
-    // console.log(targetExpense)
-    
-
-    for(const [key,value] of Object.entries(targetExpense)){
-      formEl[key].value = value;
-    }
-    formEl["submit"].textContent = "Update Expense"
-  }
-
+ document.querySelectorAll(".delete").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const id = btn.dataset.id;
+    storage.delete(id);
+    display();
+  });
 });
 
-function generateId() {
-  const numbers = "@%*!1234567890";
-  let id = "";
-  for (let i = 0; i < 5; i++) {
-    id += numbers[Math.floor(Math.random() * numbers.length)];
-  }
-  return id;
+document.querySelectorAll(".edit").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const id = btn.dataset.id;
+    const targetExpense = storage.expense.find((item) => item.id == id);
+    for (const [key, value] of Object.entries(targetExpense)) {
+      formEl[key].value = value;
+    }
+    formEl["submit"].textContent = "Update Expense";
+  });
+});
+
 }
 
-async function totalAmount(){
-  const expenses =  await fetchFn("expenses");
-  const amount = expenses.reduce((sum, expense) => {
+
+function totalAmount(expense = storage.expense) {
+  const amount = expense.reduce((sum, expense) => {
     return sum + parseFloat(expense.expenseAmount);
   }, 0);
   totalAmountEl.textContent = amount;
 }
 
-filterEl.addEventListener("change",async (event)=>{
-  const filter = event.target.value;
-  let expenses = await fetchFn("expenses");
-  if(filter == "all"){
-    display(expenses)
-  }else{
-  expenses = expenses.filter((expense) => expense.category == filter);
-    display(expenses);
-    totalAmount(expenses);}
-}
-);
-
+filterEl.addEventListener("change", async (event) => {
+  const filterStr = event.target.value;
+  const filterdExpense  = storage.filter(filterStr);
+    display(filterdExpense);
+    totalAmount(filterdExpense);
+  
+});
