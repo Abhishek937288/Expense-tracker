@@ -11,26 +11,33 @@ const fetchFn = storeFunctions.fetch;
 const storedExpenses = await fetchFn("expenses");
 if(storedExpenses){
   display(storedExpenses);
+  await totalAmount();
 }
 
 let expenses = [];
 
-formEl.addEventListener("submit", (e) => {
+formEl.addEventListener("submit", async (e) => {
   e.preventDefault();
+  // if we are updaing or creating
   const formData = new FormData(e.currentTarget);
   const datas = {};
-
   for (const item of formData.entries()) {
     const [name, value] = item;
     datas[name] = value;
-    datas.id = generateId();
   }
-  expenses.push(datas);
+
+  let allExpense = await fetchFn("expenses");
+  if(datas.id){
+    allExpense = allExpense.map(item => item.id == datas.id ? datas : item)
+    formEl["submit"].textContent = "Add Expense"
+  }else {
+   datas.id = generateId();
+   allExpense.push(datas);
+  }
   formEl.reset();
-  saveFn("expenses",expenses);
-  display(expenses);
-  totalAmount(expenses);
-  
+  saveFn("expenses",allExpense);
+  display(allExpense);
+  await totalAmount(allExpense);
 });
 
 function display(expenses) {
@@ -46,7 +53,6 @@ function display(expenses) {
    <button class="delete" data-id="${expense.id}" >Delete </button>
    <button class="edit" data-id="${expense.id}" >Edit</button>
    </td>
-   
    `;
     tableEl.appendChild(row);
   });
@@ -58,12 +64,27 @@ tableEl.addEventListener("click", async (event)=> {
     expenses = expenses.filter((expense) => expense.id !== id);
     saveFn("expenses",expenses);
     const storedExpenses = await fetchFn("expenses");
-    display(expenses);
+    display(storedExpenses);
+    await totalAmount();
   }
 
-  // if(event.target.classList.contains("edit")){
-  //   const id = event
-  // }
+  if(event.target.classList.contains("edit")){
+    const id = event.target.dataset.id;
+     const expenses = await fetchFn("expenses");
+    const targetExpense = expenses.find((item)=> item.id == id)
+    // if (formEl.elements[key]) {
+    // formEl.elements[key].value = expense[0][key];
+    // console.log(id)
+    // formEl['expenseName'].value = "New value";
+    // console.log(targetExpense)
+    
+
+    for(const [key,value] of Object.entries(targetExpense)){
+      formEl[key].value = value;
+    }
+    formEl["submit"].textContent = "Update Expense"
+  }
+
 });
 
 function generateId() {

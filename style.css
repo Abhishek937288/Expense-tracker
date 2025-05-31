@@ -6,21 +6,21 @@ body {
   padding: 0;
 }
 .container{
-   height: 1000px;
+
   width: 1000px;
   display: grid;
-
   grid-template-rows: 10% 25% 50% 15%;
   grid-template-areas:
     "head"
     "form"
     "table"
     "bottom";
-  gap: 10px;
+  gap: 40px;
   padding: 20px;
   background-color: white;
   margin: auto;
   border-radius: 10px;
+  margin-top: 50px;
 }
 .container h1{
   grid-area: head;
@@ -91,3 +91,23 @@ form button:hover {
   justify-self: end;
   gap:40px;
 }
+
+/* @media (max-width: 600px)  {
+  .container{
+
+  width: 400px;
+  display: grid;
+  grid-template-columns: 10% 25% 50% 15%;
+  grid-template-areas:
+    "head"
+    "form"
+    "table"
+    "bottom";
+  gap: 40px;
+  padding: 20px;
+  background-color: white;
+  margin: auto;
+  border-radius: 10px;
+  margin-top: 50px;
+}
+} */
